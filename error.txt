@@ -1,0 +1,74 @@
+sing deprecated `--per_gpu_train_batch_size` argument which will be removed in a future version. Using `--per_device_train_batch_size` is preferred.
+Using deprecated `--per_gpu_train_batch_size` argument which will be removed in a future version. Using `--per_device_train_batch_size` is preferred.
+***** Running training *****
+  Num examples = 974545
+  Num Epochs = 1
+  Instantaneous batch size per device = 8
+  Total train batch size (w. parallel, distributed & accumulation) = 64
+  Gradient Accumulation steps = 1
+  Total optimization steps = 15228
+Using deprecated `--per_gpu_train_batch_size` argument which will be removed in a future version. Using `--per_device_train_batch_size` is preferred.
+
+---------------------------------------------------------------------------
+RuntimeError                              Traceback (most recent call last)
+<timed eval> in <module>
+
+~/.local/lib/python3.8/site-packages/transformers/trainer.py in train(self, resume_from_checkpoint, trial, ignore_keys_for_eval, **kwargs)
+   1314                         tr_loss_step = self.training_step(model, inputs)
+   1315                 else:
+-> 1316                     tr_loss_step = self.training_step(model, inputs)
+   1317 
+   1318                 if (
+
+~/.local/lib/python3.8/site-packages/transformers/trainer.py in training_step(self, model, inputs)
+   1847                 loss = self.compute_loss(model, inputs)
+   1848         else:
+-> 1849             loss = self.compute_loss(model, inputs)
+   1850 
+   1851         if self.args.n_gpu > 1:
+
+~/.local/lib/python3.8/site-packages/transformers/trainer.py in compute_loss(self, model, inputs, return_outputs)
+   1879         else:
+   1880             labels = None
+-> 1881         outputs = model(**inputs)
+   1882         # Save past state if it exists
+   1883         # TODO: this needs to be fixed and made cleaner later.
+
+~/.local/lib/python3.8/site-packages/torch/nn/modules/module.py in _call_impl(self, *input, **kwargs)
+   1049         if not (self._backward_hooks or self._forward_hooks or self._forward_pre_hooks or _global_backward_hooks
+   1050                 or _global_forward_hooks or _global_forward_pre_hooks):
+-> 1051             return forward_call(*input, **kwargs)
+   1052         # Do not call functions when jit is used
+   1053         full_backward_hooks, non_full_backward_hooks = [], []
+
+~/.local/lib/python3.8/site-packages/transformers/models/roberta/modeling_roberta.py in forward(self, input_ids, attention_mask, token_type_ids, position_ids, head_mask, inputs_embeds, encoder_hidden_states, encoder_attention_mask, labels, output_attentions, output_hidden_states, return_dict)
+   1109         if labels is not None:
+   1110             loss_fct = CrossEntropyLoss()
+-> 1111             masked_lm_loss = loss_fct(prediction_scores.view(-1, self.config.vocab_size), labels.view(-1))
+   1112 
+   1113         if not return_dict:
+
+~/.local/lib/python3.8/site-packages/torch/nn/modules/module.py in _call_impl(self, *input, **kwargs)
+   1049         if not (self._backward_hooks or self._forward_hooks or self._forward_pre_hooks or _global_backward_hooks
+   1050                 or _global_forward_hooks or _global_forward_pre_hooks):
+-> 1051             return forward_call(*input, **kwargs)
+   1052         # Do not call functions when jit is used
+   1053         full_backward_hooks, non_full_backward_hooks = [], []
+
+~/.local/lib/python3.8/site-packages/torch/nn/modules/loss.py in forward(self, input, target)
+   1118 
+   1119     def forward(self, input: Tensor, target: Tensor) -> Tensor:
+-> 1120         return F.cross_entropy(input, target, weight=self.weight,
+   1121                                ignore_index=self.ignore_index, reduction=self.reduction)
+   1122 
+
+~/.local/lib/python3.8/site-packages/torch/nn/functional.py in cross_entropy(input, target, weight, size_average, ignore_index, reduce, reduction)
+   2822     if size_average is not None or reduce is not None:
+   2823         reduction = _Reduction.legacy_get_string(size_average, reduce)
+-> 2824     return torch._C._nn.cross_entropy_loss(input, target, weight, _Reduction.get_enum(reduction), ignore_index)
+   2825 
+   2826 
+
+RuntimeError: CUDA out of memory. Tried to allocate 1.59 GiB (GPU 0; 7.80 GiB total capacity; 5.26 GiB already allocated; 526.69 MiB free; 5.29 GiB reserved in total by PyTorch)
+
+
