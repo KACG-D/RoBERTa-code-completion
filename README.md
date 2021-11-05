@@ -1,2 +1,2 @@
 # RoBERTa-code-completion
-private code completion project
+リポジトリのルートディレクトリにtokenizer_training（トークナイザー学習用のデータセット）を配置する必要があります。
